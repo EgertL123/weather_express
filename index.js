@@ -19,7 +19,10 @@ const getWeatherData = (city) => {
         let url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${key}` 
         fetch(url)
         .then((response) => {
-            return response.json()
+            if (!response.ok) {
+                throw new Error('City Not found!');
+            }
+            return response.json();
         })
         .then((data) => {
             let description = data.weather[0].description
@@ -39,22 +42,31 @@ const getWeatherData = (city) => {
     })
 } 
 
-app.all('/', (req, res) => {
-    let city
-    if(req.method == 'GET'){
-        city = 'Tartu'
-    } else if (req.method == 'POST'){
-        city = req.body.cityname
-    }
+app.get('/', (req, res) => {
     getWeatherData(city)
-    .then((data) => {
-        res.render('index', data)
-    })
-    .catch(error => {
-        res.render('index', {
-            error: 'Problem with getting data, try again...'
+        .then((data) => {
+            res.render('index', data)
         })
-    })
+        .catch(() => {
+            res.render('index', { error: 'Problem with getting data, try again...' })
+        })
+})
+
+app.post('/', (req, res) => {
+    let city = req.body.cityname.trim()
+
+    if (city.length === 0 ) {
+        return res.render('index', {
+            error: 'Please provide a city name!',
+        } )
+    } 
+    getWeatherData(city)
+        .then((data) => {
+            res.render('index', data)
+        })
+        .catch(() => {
+            res.render('index', { error: 'Problem with getting data, try again...' })
+        })
 })
 
 app.listen(3002)
