@@ -8,6 +8,9 @@ app.set('views', path.join(__dirname, 'views'))
 
 app.use('/bootstrap', express.static(path.join(__dirname, 'node_modules/bootstrap/dist')))
 
+app.use(express.json())
+app.use(express.urlencoded({extended: true}))
+
 const key = '80e689237748f150f57c360028cbbe21' // API key
 let city = 'Tartu'
 
@@ -25,7 +28,8 @@ const getWeatherData = (city) => {
             const result = {
                 description: description,
                 city: city,
-                temp: temp
+                temp: temp,
+                error: null
             } 
             resolve(result)
         })
@@ -45,6 +49,11 @@ app.all('/', (req, res) => {
     getWeatherData(city)
     .then((data) => {
         res.render('index', data)
+    })
+    .catch(error => {
+        res.render('index', {
+            error: 'Problem with getting data, try again...'
+        })
     })
 })
 
