@@ -1,7 +1,8 @@
 <%- include('header') %>
         <div class="container">
             <div class="row">
-                <div class="col-md-6 mx-auto text-center bg-primary mt-5 p-5 rounded">
+                <div class="col-md-6 mx-auto text-center bg-success mt-5 p-5 rounded"
+                    style="background-image: url(https://i0.wp.com/angelatravels.com/wp-content/uploads/2019/01/43920623172_7443b1e368_b.jpg?fit=1024%2C683&ssl=1);">
                     <% if(error === null){ %>
                     <h1 id="location">
                         <%= city %>
@@ -29,7 +30,7 @@
                                 name="cityname"
                                 >
                             </div>
-                            <input type="submit" class="btn btn-light mt-3" value="Save changes">
+                            <input type="submit" class="btn btn-dark mt-3" value="Save changes">
                         </form>
                         <% } else { %>
                             <div class="alert alert-danger" role="alert">
